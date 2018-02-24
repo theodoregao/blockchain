@@ -13,17 +13,17 @@ describe('Transaction', () => {
   });
 
   it('outputs the `amount` subtracted from the wallet balance', () => {
-    expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount).toEqual(
+    expect(transaction.transactions.find(output => output.address === wallet.publicKey).amount).toEqual(
       wallet.balance - amount
     );
   });
 
   it('outputs the `amount` added to the recipient', () => {
-    expect(transaction.outputs.find(output => output.address === recipient).amount).toEqual(amount);
+    expect(transaction.transactions.find(output => output.address === recipient).amount).toEqual(amount);
   });
 
   it('inputs the balance of the wallet', () => {
-    expect(transaction.input.amount).toEqual(wallet.balance);
+    expect(transaction.blockHeader.amount).toEqual(wallet.balance);
   });
 
   it('validates a valid transaction', () => {
@@ -31,7 +31,7 @@ describe('Transaction', () => {
   });
 
   it('invalidates a corrupted transaction', () => {
-    transaction.outputs[0].amount = 50000;
+    transaction.transactions[0].amount = 50000;
     expect(Transaction.verifyTransaction(transaction)).toBe(false);
   });
 
@@ -62,7 +62,7 @@ describe('Transaction', () => {
     });
 
     it('outputs an amount for the next recipient', () => {
-      expect(transaction.outputs.find(output => output.address === nextRecipient).amount).toEqual(nextAmount);
+      expect(transaction.transactions.find(output => output.address === nextRecipient).amount).toEqual(nextAmount);
     });
   });
 
@@ -72,7 +72,9 @@ describe('Transaction', () => {
     });
 
     it(`reward the miner's wallet`, () => {
-      expect(transaction.outputs.find(output => output.address === wallet.publicKey).amount).toEqual(MINING_REWARD);
+      expect(transaction.transactions.find(output => output.address === wallet.publicKey).amount).toEqual(
+        MINING_REWARD
+      );
     });
   });
 });

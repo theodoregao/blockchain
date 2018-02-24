@@ -41,7 +41,7 @@ describe('TransactionPool', () => {
         wallet = new Wallet();
         transaction = wallet.createTransaction('r4nd-4dr3dd', 30, blockchain, tp);
         if (i % 2 == 0) {
-          transaction.input.amount = 99999;
+          transaction.blockHeader.amount = 99999;
         } else {
           validTransactions.push(transaction);
         }

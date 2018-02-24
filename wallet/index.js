@@ -48,21 +48,23 @@ class Wallet {
       })
     );
 
-    const walletInputTransactions = transactions.filter(transaction => transaction.input.address === this.publicKey);
+    const walletInputTransactions = transactions.filter(
+      transaction => transaction.blockHeader.address === this.publicKey
+    );
 
     let startTime = 0;
 
     if (walletInputTransactions.length > 0) {
       const recentInputTransaction = walletInputTransactions.reduce(
-        (prev, cur) => (prev.input.timestamp > cur.input.timestamp ? prev : cur)
+        (prev, cur) => (prev.blockHeader.timestamp > cur.blockHeader.timestamp ? prev : cur)
       );
-      balance = recentInputTransaction.outputs.find(output => output.address === this.publicKey).amount;
-      startTime = recentInputTransaction.input.timestamp;
+      balance = recentInputTransaction.transactions.find(output => output.address === this.publicKey).amount;
+      startTime = recentInputTransaction.blockHeader.timestamp;
     }
 
     transactions.forEach(transaction => {
-      if (transaction.input.timestamp > startTime) {
-        transaction.outputs.find(output => {
+      if (transaction.blockHeader.timestamp > startTime) {
+        transaction.transactions.find(output => {
           if (output.address === this.publicKey) {
             balance += output.amount;
           }

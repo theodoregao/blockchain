@@ -16,22 +16,22 @@ class TransactionPool {
   }
 
   existingTransaction(address) {
-    return this.transactions.find(t => t.input.address === address);
+    return this.transactions.find(t => t.blockHeader.address === address);
   }
 
   validTransactions() {
     return this.transactions.filter(transaction => {
-      const outputTotal = transaction.outputs.reduce((total, output) => {
+      const outputTotal = transaction.transactions.reduce((total, output) => {
         return total + output.amount;
       }, 0);
 
-      if (transaction.input.amount !== outputTotal) {
-        console.log(`Invalid transaction from ${transaction.input.address}.`);
+      if (transaction.blockHeader.amount !== outputTotal) {
+        console.log(`Invalid transaction from ${transaction.blockHeader.address}.`);
         return;
       }
 
       if (!Transaction.verifyTransaction(transaction)) {
-        console.log(`Invalid signature from ${transaction.input.address}.`);
+        console.log(`Invalid signature from ${transaction.blockHeader.address}.`);
         return;
       }
 
